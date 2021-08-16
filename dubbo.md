@@ -1,31 +1,22 @@
 ## 基础知识
 #### 1. 为什么要用 Dubbo？
-随着服务化的进一步发展，服务越来越多，服务之间的调用和依赖关系也越来越复杂，诞生了面向
-服务的架构体系(SOA)，也因此衍生出了一系列相应的技术，如对服务提供、服务调用、连接处
-理、通信协议、序列化方式、服务发现、服务路由、日志输出等行为进行封装的服务框架。就这样
-为分布式系统的服务治理框架就出现了，Dubbo 也就这样产生了。
+随着服务化的进一步发展，服务越来越多，服务之间的调用和依赖关系也越来越复杂，诞生了面向服务的架构体系(SOA)，也因此衍生出了一系列相应的技术，如对服务提供、服务调用、连接处理、通信协议、序列化方式、服务发现、服务路由、日志输出等行为进行封装的服务框架。就这样为分布式系统的服务治理框架就出现了，Dubbo 也就这样产生了。
 #### 2. Dubbo 是什么？
-Dubbo 是一款高性能、轻量级的开源 RPC 框架，提供服务自动注册、自动发现等高效服务治理方
-案， 可以和 Spring 框架无缝集成。
+Dubbo 是一款高性能、轻量级的开源 RPC 框架，提供服务自动注册、自动发现等高效服务治理方案， 可以和 Spring 框架无缝集成。
 #### 3. Dubbo 的使用场景有哪些？
-透明化的远程方法调用：就像调用本地方法一样调用远程方法，只需简单配置，没有任何API侵
-入。
-软负载均衡及容错机制：可在内网替代 F5 等硬件负载均衡器，降低成本，减少单点。
-服务自动注册与发现：不再需要写死服务提供方地址，注册中心基于接口名查询服务提供者的IP地
-址，并且能够平滑添加或删除服务提供者。
+- 透明化的远程方法调用：就像调用本地方法一样调用远程方法，只需简单配置，没有任何API侵入。
+- 软负载均衡及容错机制：可在内网替代 F5 等硬件负载均衡器，降低成本，减少单点。
+- 服务自动注册与发现：不再需要写死服务提供方地址，注册中心基于接口名查询服务提供者的IP地址，并且能够平滑添加或删除服务提供者。
 #### 4. Dubbo 核心功能有哪些？
-Remoting：网络通信框架，提供对多种NIO框架抽象封装，包括“同步转异步”和“请求-响应”模式
-的信息交换方式。
-Cluster：服务框架，提供基于接口方法的透明远程过程调用，包括多协议支持，以及软负载均
-衡，失败容错，地址路由，动态配置等集群支持。
-Registry：服务注册，基于注册中心目录服务，使服务消费方能动态的查找服务提供方，使地址透
-明，使服务提供方可以平滑增加或减少机器。
-5. Dubbo 核心组件有哪些？
-Provider：暴露服务的服务提供方
-Consumer：调用远程服务消费方
-Registry：服务注册与发现注册中心
-Monitor：监控中心和访问调用统计
-Container：服务运行容器
+- Remoting：网络通信框架，提供对多种NIO框架抽象封装，包括“同步转异步”和“请求-响应”模式的信息交换方式。
+- Cluster：服务框架，提供基于接口方法的透明远程过程调用，包括多协议支持，以及软负载均衡，失败容错，地址路由，动态配置等集群支持。
+- Registry：服务注册，基于注册中心目录服务，使服务消费方能动态的查找服务提供方，使地址透明，使服务提供方可以平滑增加或减少机器。
+#### 5. Dubbo 核心组件有哪些？
+- Provider：暴露服务的服务提供方
+- Consumer：调用远程服务消费方
+- Registry：服务注册与发现注册中心
+- Monitor：监控中心和访问调用统计
+- Container：服务运行容器
 #### 6. Dubbo 服务器注册与发现的流程？
 - 服务容器Container负责启动，加载，运行服务提供者。
 - 服务提供者Provider在启动时，向注册中心注册自己提供的服务。
@@ -46,17 +37,11 @@ Container：服务运行容器
 - 网络 传输 层（Transport）：抽象 mina 和 netty 为统一接口，以 Message 为中心，扩展接口为Channel、Transporter、Client、Server 和 Codec
 - 数据序列化层（Serialize）：可复用的一些工具，扩展接口为 Serialization、ObjectInput、ObjectOutput 和 ThreadPool
 #### 8. Dubbo Monitor 实现原理？
-Consumer 端在发起调用之前会先走 filter 链；provider 端在接收到请求时也是先走 filter 链，然后才进行真正的业务逻辑处理。默认情况下，在 consumer 和 provider 的 filter 链中都会有
-Monitorfilter。
+Consumer 端在发起调用之前会先走 filter 链；provider 端在接收到请求时也是先走 filter 链，然后才进行真正的业务逻辑处理。默认情况下，在 consumer 和 provider 的 filter 链中都会有Monitorfilter。
 1. MonitorFilter 向 DubboMonitor 发送数据
-2. DubboMonitor 将数据进行聚合后（默认聚合 1min 中的统计数据）暂存到
-ConcurrentMap<Statistics, AtomicReference> statisticsMap，然后使用一个含有 3 个线程（线
-程名字：DubboMonitorSendTimer）的线程池每隔 1min 钟，调用 SimpleMonitorService 遍历
-发送 statisticsMap 中的统计数据，每发送完毕一个，就重置当前的 Statistics 的
-AtomicReference
+2. DubboMonitor 将数据进行聚合后（默认聚合 1min 中的统计数据）暂存到ConcurrentMap<Statistics, AtomicReference> statisticsMap，然后使用一个含有 3 个线程（线程名字：DubboMonitorSendTimer）的线程池每隔 1min 钟，调用 SimpleMonitorService 遍历发statisticsMap 中的统计数据，每发送完毕一个，就重置当前的 Statistics 的AtomicReference
 3. SimpleMonitorService 将这些聚合数据塞入 BlockingQueue queue 中（队列大写为 100000） 4. SimpleMonitorService 使用一个后台线程（线程名为：DubboMonitorAsyncWriteLogThread） 将 queue 中的数据写入文件（该线程以死循环的形式来写）
-5. SimpleMonitorService 还会使用一个含有 1 个线程（线程名字：DubboMonitorTimer）的线程
-池每隔 5min 钟，将文件中的统计数据画成图表
+5. SimpleMonitorService 还会使用一个含有 1 个线程（线程名字：DubboMonitorTimer）的线程池每隔 5min 钟，将文件中的统计数据画成图表
 ## 分布式框架
 #### 9. Dubbo 类似的分布式框架还有哪些？
 比较著名的就是 Spring Cloud。

@@ -1,51 +1,48 @@
-本文整理了一些常用的 Git 操作，老司机可以温故知新，新手可以点赞收藏。文末提供了入门教程及学
-习资源，请自行下滑～
-配置操作
-全局配置
+#### 全局配置
  git config --global user.name '你的名字' git config --global user.email '你的邮箱'
-当前仓库配置
+#### 当前仓库配置
  git config --local user.name '你的名字' git config --local user.email '你的邮箱'
-查看 global 配置
+#### 查看 global 配置
  git config --global --list
-查看当前仓库配置
+#### 查看当前仓库配置
  git config --local --list
-删除 global 配置
+#### 删除 global 配置
  git config --unset --global 要删除的配置项
-删除当前仓库配置
+#### 删除当前仓库配置
  git config --unset --local 要删除的配置项
-本地操作
-查看变更情况
+## 本地操作
+#### 查看变更情况
  git status
-将当前目录及其子目录下所有变更都加入到暂存区
+#### 将当前目录及其子目录下所有变更都加入到暂存区
  git add .
-将仓库内所有变更都加入到暂存区
+#### 将仓库内所有变更都加入到暂存区
  git add -A
-将指定文件添加到暂存区
+#### 将指定文件添加到暂存区
  git add 文件1 文件2 文件3
-比较工作区和暂存区的所有差异
+#### 比较工作区和暂存区的所有差异
  git diff
-比较某文件工作区和暂存区的差异
+#### 比较某文件工作区和暂存区的差异
  git diff 文件
-比较暂存区和 HEAD 的所有差异
+#### 比较暂存区和 HEAD 的所有差异
  git diff --cached
-比较某文件暂存区和 HEAD 的差异
+#### 比较某文件暂存区和 HEAD 的差异
  git diff --cached 文件
-比较某文件工作区和 HEAD 的差异
+#### 比较某文件工作区和 HEAD 的差异
  git diff HEAD 文件
-创建 commit
+#### 创建 commit
 git commit
-将工作区指定文件恢复成和暂存区一致
+#### 将工作区指定文件恢复成和暂存区一致
  git checkout 文件1 文件2 文件3
-将暂存区指定文件恢复成和 HEAD 一致
+#### 将暂存区指定文件恢复成和 HEAD 一致
  git reset 文件1 文件2 文件3
-将暂存区和工作区所有文件恢复成和 HEAD 一样
+#### 将暂存区和工作区所有文件恢复成和 HEAD 一样
  git reset --hard 用 difftool 比较任意两个 commit 的差异
  git difftool 提交1 提交2
-查看哪些文件没被 Git 管控
+#### 查看哪些文件没被 Git 管控
  git ls-files --others
-将未处理完的变更先保存到 stash 中
+#### 将未处理完的变更先保存到 stash 中
  git stash
-临时任务处理完后继续之前的工作
+#### 临时任务处理完后继续之前的工作
 pop 不保留 stash
 apply 保留 stash
 git stash pop git stash apply

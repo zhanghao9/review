@@ -46,84 +46,84 @@ git commit
 pop 不保留 stash
 apply 保留 stash
 git stash pop git stash apply
-查看所有 stash
+#### 查看所有 stash
 git stash list
-取回某次 stash 的变更
+#### 取回某次 stash 的变更
  git stash pop stash@{数字n}
-优雅修改最后一次 commit
+#### 优雅修改最后一次 commit
 git add. git commit --amend
-分支操作
-查看当前工作分支及本地分支
+## 分支操作
+#### 查看当前工作分支及本地分支
  git branch -v
-查看本地和远端分支
+#### 查看本地和远端分支
  git branch -av
-查看远端分支
+#### 查看远端分支
  git branch -rv
-切换到指定分支
+#### 切换到指定分支
  git checkout 指定分支
-基于当前分支创建新分支
+#### 基于当前分支创建新分支
  git branch 新分支
-基于指定分支创建新分支
+#### 基于指定分支创建新分支
  git branch 新分支 指定分支
-基于某个 commit 创建分支
+#### 基于某个 commit 创建分支
  git branch 新分支 某个 commit 的 id
-创建并切换到该分支
+#### 创建并切换到该分支
  git checkout -b 新分支
-安全删除本地某分支
+#### 安全删除本地某分支
  git branch -d 要删除的分支
-强行删除本地某分支
+#### 强行删除本地某分支
  git branch -D 要删除的分支
-删除已合并到 master 分支的所有本地分支
+#### 删除已合并到 master 分支的所有本地分支
  git branch --merged master | grep -v '^\*\| master' | xargs -n 1 git branch -d
-删除远端 origin 已不存在的所有本地分支
+#### 删除远端 origin 已不存在的所有本地分支
  git remote prune orign 将 A 分支合入到当前分支中且为 merge 创建 commit
 git merge A分支 将 A 分支合入到 B 分支中且为 merge 创建 commit
 git merge A分支 B分支
-将当前分支基于 B 分支做 rebase，以便将B分支合入到当前分支
+#### 将当前分支基于 B 分支做 rebase，以便将B分支合入到当前分支
  git rebase B分支 将 A 分支基于 B 分支做 rebase，以便将 B 分支合入到 A 分支
  git rebase B分支 A分支
-变更历史
-当前分支各个 commit 用一行显示
+#### 变更历史
+#### 当前分支各个 commit 用一行显示
  git log --oneline
-显示就近的 n 个 commit
+#### 显示就近的 n 个 commit
 git log -n
-用图示显示所有分支的历史
+#### 用图示显示所有分支的历史
  git log --oneline --graph --all
-查看涉及到某文件变更的所有 commit
+#### 查看涉及到某文件变更的所有 commit
 git log 文件
-某文件各行最后修改对应的 commit 以及作者
+#### 某文件各行最后修改对应的 commit 以及作者
  git blame 文件
-标签操作
-查看已有标签
+#### 标签操作
+#### 查看已有标签
  git tag
-新建标签
+#### 新建标签
  git tag v1.0
-新建带备注标签
+#### 新建带备注标签
  git tag -a v1.0 -m '前端食堂'
-给指定的 commit 打标签
+#### 给指定的 commit 打标签
  git tag v1.0 commitid
-推送一个本地标签
+#### 推送一个本地标签
  git push origin v1.0
-推送全部未推送过的本地标签
+#### 推送全部未推送过的本地标签
  git push origin --tags
-删除一个本地标签
+#### 删除一个本地标签
  git tag -d v1.0
-删除一个远端标签
+#### 删除一个远端标签
  git push origin :refs/tags/v1.0
-远端交互
-查看所有远端仓库
+## 远端交互
+#### 查看所有远端仓库
  git remote -v
-添加远端仓库
+#### 添加远端仓库
  git remote add url
-删除远端仓库
+#### 删除远端仓库
  git remote remove remote的名称
-重命名远端仓库
+#### 重命名远端仓库
  git remote rename 旧名称 新名称
-将远端所有分支和标签的变更都拉到本地
+#### 将远端所有分支和标签的变更都拉到本地
  git fetch remote
-把远端分支的变更拉到本地，且 merge 到本地分支
+#### 把远端分支的变更拉到本地，且 merge 到本地分支
 git pull origin 分支名
-将本地分支 push 到远端
+#### 将本地分支 push 到远端
  git push origin 分支名
-删除远端分支
+#### 删除远端分支
  git push remote --delete 远端分支名 git push remote :远端分支名

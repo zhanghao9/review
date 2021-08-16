@@ -219,8 +219,10 @@ close   表示以什么结束，常用“)”。
 map的key就是参数名，所以这个时候collection属性值就是传入的List或array对象在自己封
 装的map里面的key
 具体用法如下：
+```
 public User selectUser(Map<String, Object> params); <select id="selectUser" parameterType="java.util.Map" resultMap="UserResultMap"> select * from user where user_name = #{userName} and dept_id = #{deptId} </select> public User selectUser(User user); <select id="selectUser" parameterType="com.jourwon.pojo.User" resultMap="UserResultMap"> select * from user where user_name = #{userName} and dept_id = #{deptId} </select>
 <!-- 批量保存(foreach插入多条数据两种方法) int addEmpsBatch(@Param("emps") List<Employee> emps); --> <!-- MySQL下批量保存，可以foreach遍历 mysql支持values(),(),()语法 --> //推荐使用 <insert id="addEmpsBatch"> INSERT INTO emp(ename,gender,email,did) VALUES <foreach collection="emps" item="emp" separator=","> (#{emp.eName},#{emp.gender},#{emp.email},#{emp.dept.id}) </foreach> </insert> <!-- 这种方式需要数据库连接属性allowMutiQueries=true的支持 如jdbc.url=jdbc:mysql://localhost:3306/mybatis?allowMultiQueries=true --> <insert id="addEmpsBatch"> <foreach collection="emps" item="emp" separator=";"> INSERT INTO emp(ename,gender,email,did) VALUES(#{emp.eName},#{emp.gender},#{emp.email},#{emp.dept.id}) </foreach> </insert>
+```
 使用ExecutorType.BATCH
 Mybatis内置的ExecutorType有3种，默认为simple,该模式下它为每个语句的执行创建一个
 新的预处理语句，单条提交sql；而batch模式重复使用已经预处理的语句，并且批量执行所
@@ -233,7 +235,9 @@ mapper和mapper.xml如下
 新增标签中添加：keyProperty=" ID " 即可
 #### 22. 当实体类中的属性名和表中的字段名不一样 ，怎么办
 第1种： 通过在查询的SQL语句中定义字段名的别名，让字段名的别名和实体类的属性名一致。
+```
 //非批量 （预编译=设置参数=执行 ）==》10000次 1121 } finally { openSession.close(); } }public interface EmployeeMapper { //批量保存员工 Long addEmp(Employee employee); } ``` <mapper namespace="com.jourwon.mapper.EmployeeMapper" <!--批量保存员工 --> <insert id="addEmp"> insert into employee(lastName,email,gender) values(#{lastName},#{email},#{gender}) </insert> </mapper> ``` <insert id="insert" useGeneratedKeys="true" keyProperty="userId" > insert into user( user_name, user_password, create_time) values(#{userName}, #{userPassword} , #{createTime, jdbcType= TIMESTAMP}) </insert>
+```
 第2种： 通过 <resultMap> 来映射字段名和实体类属性名的一一对应的关系。
 #### 23. Mapper 编写有哪几种方式？
 第一种：接口实现类继承 SqlSessionDaoSupport：使用此种方法需要编写mapper 接口，
@@ -245,8 +249,10 @@ mapper 接口实现类、mapper.xml 文件。
 4. spring 配置
 第二种：使用 org.mybatis.spring.mapper.MapperFactoryBean： 1. 在 sqlMapConfig.xml 中配置 mapper.xml 的位置，如果 mapper.xml 和mappre 接口的名
 称相同且在同一个目录，这里可以不用配置
+ ```
 <select id="getOrder" parameterType="int" resultType="com.jourwon.pojo.Order"> select order_id id, order_no orderno ,order_price price form orders where order_id=#{id}; </select> <select id="getOrder" parameterType="int" resultMap="orderResultMap"> select * from orders where order_id=#{id} </select> <resultMap type="com.jourwon.pojo.Order" id="orderResultMap"> <!–用id属性来映射主键字段–> <id property="id" column="order_id"> <!–用result属性来映射非主键字段，property为实体类属性名，column为数据库表中的属 性–> <result property ="orderno" column ="order_no"/> <result property="price" column="order_price" /> </reslutMap> <mappers> <mapper resource="mapper.xml 文件的地址" /> <mapper resource="mapper.xml 文件的地址" /> </mappers> <bean id=" " class="mapper 接口的实现"> <property name="sqlSessionFactory" ref="sqlSessionFactory"></property> </bean>
-2. 定义 mapper 接口：
+```
+ 2. 定义 mapper 接口：
 3. mapper.xml 中的 namespace 为 mapper 接口的地址
 4. mapper 接口中的方法名和 mapper.xml 中的定义的 statement 的 id 保持一致
 5. Spring 中定义
@@ -258,7 +264,7 @@ mapper 接口中的方法名和 mapper.xml 中的定义的 statement 的 id 保�
 2. 定义 mapper 接口：
 注意 mapper.xml 的文件名和 mapper 的接口名称保持一致，且放在同一个目录
 3. 配置 mapper 扫描器：
-24. 什么是MyBatis的接口绑定？有哪些实现方式？
+#### 24. 什么是MyBatis的接口绑定？有哪些实现方式？
 接口绑定，就是在MyBatis中任意定义接口，然后把接口里面的方法和SQL语句绑定，我们直接调
 用接口方法就可以，这样比起原来了SqlSession提供的方法我们可以有更加灵活的选择和设置。
 接口绑定有两种实现方式
@@ -267,8 +273,11 @@ mapper 接口中的方法名和 mapper.xml 中的定义的 statement 的 id 保�
 2. 通过xml里面写SQL来绑定， 在这种情况下，要指定xml映射文件里面的namespace必须为
 接口的全路径名。当Sql语句比较简单时候，用注解绑定， 当SQL语句比较复杂时候，用xml
 绑定，一般用xml绑定的比较多。
+ ```
 <mappers> <mapper resource="mapper.xml 文件的地址" /> <mapper resource="mapper.xml 文件的地址" /> </mappers> <bean id="" class="org.mybatis.spring.mapper.MapperFactoryBean"> <property name="mapperInterface" value="mapper 接口地址" /> <property name="sqlSessionFactory" ref="sqlSessionFactory" /> </bean> <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"> <property name="basePackage" value="mapper 接口包地址 "></property> <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/> </bean> 4. 使用扫描器后从 spring 容器中获取 mapper 的实现对象。
-25. 使用MyBatis的mapper接口调用时有哪些要求？
+
+ ```
+ 25. 使用MyBatis的mapper接口调用时有哪些要求？
 1. Mapper接口方法名和mapper.xml中定义的每个sql的id相同。
 2. Mapper接口方法的输入参数类型和mapper.xml中定义的每个sql 的parameterType的类型相
 同。
@@ -287,21 +296,19 @@ Dao接口里的方法，是不能重载的，因为是全限名+方法名的保�
 原因就是namespace+id是作为Map<String, MappedStatement>的key使用的，如果没有
 namespace，就剩下id，那么，id重复会导致数据互相覆盖。有了namespace，自然id就可以重
 复，namespace不同，namespace+id自然也就不同。
-#### 28. 简述Mybatis的Xml映射文件和Mybatis内部数据结构之间的映
-射关系？
+#### 28. 简述Mybatis的Xml映射文件和Mybatis内部数据结构之间的映射关系？
 答：Mybatis将所有Xml配置信息都封装到All-In-One重量级对象Configuration内部。在Xml映射
 文件中， <parameterMap> 标签会被解析为ParameterMap对象，其每个子元素会被解析为
 ParameterMapping对象。 <resultMap> 标签会被解析为ResultMap对象，其每个子元素会被解
 析为ResultMapping对象。每一个 <select> 、 <insert> 、 <update> 、 <delete> 标签均会被
 解析为MappedStatement对象，标签内的sql会被解析为BoundSql对象。
-29. Mybatis是如何将sql执行结果封装为目标对象并返回的？都有哪
-些映射形式？
+#### 29. Mybatis是如何将sql执行结果封装为目标对象并返回的？都有哪些映射形式？
 第一种是使用 <resultMap> 标签，逐一定义列名和对象属性名之间的映射关系。
 第二种是使用sql列的别名功能，将列别名书写为对象属性名，比如T_NAME AS NAME，对象属性
 名一般是name，小写，但是列名不区分大小写，Mybatis会忽略列名大小写，智能找到与之对应
 对象属性名，你甚至可以写成T_NAME AS NaMe，Mybatis一样可以正常工作。
 有了列名与属性名的映射关系后，Mybatis通过反射创建对象，同时使用反射给对象的属性逐一赋值并返回，那 些找不到映射关系的属性，是无法完成赋值的。
-30. Xml映射文件中，除了常见的select|insert|updae|delete标
+#### 30. Xml映射文件中，除了常见的select|insert|updae|delete标
 签之外，还有哪些标签？
 还有很多其他的标签， <resultMap> 、 <parameterMap> 、 <sql> 、 <include> 、 <selectKey> ，加上动态sql的9个标签，
 trim|where|set|foreach|if|choose|when|otherwise|bind等，其中 <sql> 为sql片段标签，通
@@ -328,7 +335,7 @@ Mybatis可以映射枚举类，不单可以映射枚举类，Mybatis可以映射
 TypeHandler有两个作用，一是完成从javaType至jdbcType的转换，二是完成jdbcType至
 javaType的转换，体现为setParameter()和getResult()两个方法，分别代表设置sql问号占位符参
 数和获取列查询结果。
-34. Mybatis动态sql是做什么的？都有哪些动态sql？能简述一下动
+#### 34. Mybatis动态sql是做什么的？都有哪些动态sql？能简述一下动
 态sql的执行原理吗？
 Mybatis动态sql可以让我们在Xml映射文件内，以标签的形式编写动态sql，完成逻辑判断和动态
 拼接sql的功能，Mybatis提供了9种动态sql标签
